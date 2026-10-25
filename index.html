@@ -222,33 +222,33 @@
     const PROJECTS_DATA = [
       {
         id: 1,
-        title: 'UMKM Promo & Business Site',
-        category: 'Web App',
-        description: 'Platform promosi digital interaktif untuk membantu UMKM lokal memasarkan produk secara luas dengan tampilan modern.',
-        tags: ['React', 'Tailwind CSS', 'Framer Motion'],
-        image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
-        demoUrl: '#',
-        githubUrl: '#'
+        title: 'Amalzone Nature Tourism',
+        category: 'Nature & Tourism Web',
+        description: 'Website destinasi wisata alam tropis premium di Pontianak / Kubu Raya dengan galeri interaktif, menu kuliner, sistem pemancingan, dan informasi kunjungan.',
+        tags: ['React', 'Tailwind CSS', 'Framer Motion', 'Tropical UI/UX'],
+        image: './images/amalzone-1.jpg',
+        demoUrl: './amalzone/index.html',
+        githubUrl: 'https://github.com/arifhasbilah/arifhasbilah.ac.id'
       },
       {
         id: 2,
-        title: 'Barbershop Landing Page',
-        category: 'Landing Page',
-        description: 'Situs web pemesanan dan katalog gaya rambut modern dengan desain dark aesthetic premium dan sistem reservasi simpel.',
-        tags: ['HTML5', 'Tailwind CSS', 'JavaScript'],
-        image: 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80',
-        demoUrl: '#',
-        githubUrl: '#'
-      },
-      {
-        id: 3,
         title: 'Bobipada Memory Web App',
         category: 'Interactive Web',
         description: 'Aplikasi kenangan interaktif berbasis web dengan galeri foto, player musik kustom, dan timeline momen spesial.',
         tags: ['React', 'CSS Modules', 'Web Audio API'],
         image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80',
-        demoUrl: '#',
-        githubUrl: '#'
+        demoUrl: 'https://bobipadahitamlegam11.netlify.app/',
+        githubUrl: 'https://github.com/arifhasbilah/arifhasbilah.ac.id'
+      },
+      {
+        id: 3,
+        title: 'Portal Pengumpulan Tugas',
+        category: 'Web Portal',
+        description: 'Situs web terstruktur untuk dokumentasi dan pengumpulan tugas serta proyek akademis secara rapi, responsif, dan mudah diakses.',
+        tags: ['HTML5', 'Tailwind CSS', 'JavaScript'],
+        image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=800&q=80',
+        demoUrl: 'https://arfhasblh.netlify.app/',
+        githubUrl: 'https://github.com/arifhasbilah/arifhasbilah.ac.id'
       }
     ];
 
@@ -772,27 +772,43 @@
               {activeTab === 'projects' && (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-modal">
                   {PROJECTS_DATA.map((project) => (
-                    <div
+                    <a
                       key={project.id}
-                      className="bg-[#0b0d17]/80 backdrop-blur-xl border border-[#2c67ed]/30 rounded-2xl overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.5)] flex flex-col group hover:border-[#2c67ed]/70 hover:-translate-y-2 transition-all duration-300"
+                      href={project.demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-[#0b0d17]/80 backdrop-blur-xl border border-[#2c67ed]/30 hover:border-[#2c67ed] rounded-2xl overflow-hidden shadow-[0_0_25px_rgba(0,0,0,0.5)] hover:shadow-[0_0_30px_rgba(44,103,237,0.4)] flex flex-col group hover:-translate-y-2 transition-all duration-300 cursor-pointer block no-underline text-inherit"
+                      title={`Klik untuk langsung membuka ${project.title}`}
                     >
-                      <div className="relative h-48 overflow-hidden">
+                      {/* TAMPILAN GAMBAR / PREVIEW PROJEK */}
+                      <div className="relative h-48 overflow-hidden block">
                         <img 
                           src={project.image} 
                           alt={project.title}
                           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d17] via-transparent to-transparent opacity-90" />
-                        <span className="absolute top-3 right-3 text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#050508]/80 text-[#2c67ed] border border-[#2c67ed]/40 backdrop-blur-md">
+                        
+                        {/* Overlay hover interaktif: Klik untuk buka */}
+                        <div className="absolute inset-0 bg-[#0b0d17]/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+                          <div className="px-4 py-2 rounded-xl bg-[#2c67ed] text-white text-xs font-semibold flex items-center gap-2 shadow-[0_0_20px_rgba(44,103,237,0.8)] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                            <span>Buka Website Sekarang</span>
+                            <Icon name="externalLink" className="w-4 h-4" />
+                          </div>
+                        </div>
+
+                        <span className="absolute top-3 right-3 text-[10px] font-mono px-2.5 py-1 rounded-full bg-[#050508]/80 text-[#2c67ed] border border-[#2c67ed]/40 backdrop-blur-md z-10">
                           {project.category}
                         </span>
                       </div>
 
                       <div className="p-5 flex-1 flex flex-col justify-between">
                         <div>
-                          <h4 className="text-lg font-bold text-white mb-2 group-hover:text-[#2c67ed] transition-colors">
-                            {project.title}
+                          <h4 className="text-lg font-bold text-white group-hover:text-[#2c67ed] transition-colors flex items-center gap-1.5 mb-2">
+                            <span>{project.title}</span>
+                            <Icon name="arrowUpRight" className="w-4 h-4 text-[#2c67ed] opacity-75 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                           </h4>
+                          
                           <p className="text-xs text-slate-400 leading-relaxed mb-4">
                             {project.description}
                           </p>
@@ -810,18 +826,18 @@
                             ))}
                           </div>
 
-                          <div className="flex items-center gap-2 pt-3 border-t border-white/10">
-                            <button
-                              onClick={() => setSelectedProject(project)}
-                              className="flex-1 py-2 px-3 rounded-lg bg-[#2c67ed]/20 text-[#2c67ed] hover:bg-[#2c67ed] hover:text-white border border-[#2c67ed]/40 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                          {/* TOMBOL INDIKATOR DI BAWAH KARTU */}
+                          <div className="pt-3 border-t border-white/10">
+                            <div
+                              className="w-full py-2.5 px-3 rounded-xl bg-[#2c67ed] group-hover:bg-indigo-600 text-white text-xs font-semibold transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(44,103,237,0.4)]"
                             >
-                              <span>Detail Proyek</span>
-                              <Icon name="arrowUpRight" className="w-3.5 h-3.5" />
-                            </button>
+                              <span>Buka Website Sekarang</span>
+                              <Icon name="externalLink" className="w-3.5 h-3.5" />
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
               )}
@@ -923,15 +939,20 @@
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-[#2c67ed]/20 text-[#2c67ed] border border-[#2c67ed]/40">
+                      <a 
+                        href="https://wa.me/6281649017394" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-3 group hover:opacity-90 transition-opacity"
+                      >
+                        <div className="p-2.5 rounded-xl bg-[#2c67ed]/20 text-[#2c67ed] border border-[#2c67ed]/40 group-hover:bg-[#2c67ed] group-hover:text-white transition-all">
                           <Icon name="messageSquare" className="w-4 h-4" />
                         </div>
                         <div>
                           <p className="text-[10px] text-slate-400 font-mono">WHATSAPP</p>
-                          <p className="text-xs font-semibold text-slate-200">+62 8xx-xxxx-xxxx</p>
+                          <p className="text-xs font-semibold text-slate-200 group-hover:text-[#2c67ed] transition-colors">+62 816-4901-7394</p>
                         </div>
-                      </div>
+                      </a>
                     </div>
                   </div>
 
@@ -939,9 +960,9 @@
                     <p className="text-xs font-semibold text-slate-300 mb-3">Social Media</p>
                     <div className="flex items-center gap-2">
                       {[
-                        { icon: 'github', href: 'https://github.com', label: 'GitHub' },
+                        { icon: 'github', href: 'https://github.com/arifhasbilah', label: 'GitHub' },
                         { icon: 'linkedin', href: 'https://linkedin.com', label: 'LinkedIn' },
-                        { icon: 'instagram', href: 'https://instagram.com', label: 'Instagram' }
+                        { icon: 'instagram', href: 'https://www.instagram.com/rfhsblh', label: 'Instagram' }
                       ].map((soc, idx) => (
                         <a
                           key={idx}
@@ -1075,15 +1096,17 @@
                   <div className="flex gap-3">
                     <a
                       href={selectedProject.demoUrl}
-                      onClick={(e) => { e.preventDefault(); alert("Live Demo Preview"); }}
-                      className="flex-1 py-2.5 rounded-xl bg-[#2c67ed] text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-indigo-600 transition-colors"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-2.5 rounded-xl bg-[#2c67ed] text-white text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-indigo-600 transition-colors shadow-[0_0_15px_rgba(44,103,237,0.4)]"
                     >
-                      <span>Live Demo</span>
+                      <span>Buka Website Langsung</span>
                       <Icon name="externalLink" className="w-3.5 h-3.5" />
                     </a>
                     <a
                       href={selectedProject.githubUrl}
-                      onClick={(e) => { e.preventDefault(); alert("GitHub Repository"); }}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1 py-2.5 rounded-xl bg-white/10 text-slate-200 text-xs font-semibold flex items-center justify-center gap-1.5 hover:bg-white/20 transition-colors"
                     >
                       <span>GitHub Code</span>
