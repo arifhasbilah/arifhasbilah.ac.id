@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tx_arfhasblh - Sistem Manajemen & Pengumpulan Tugas</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            ocean: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              200: '#bae6fd',
+              300: '#7dd3fc',
+              400: '#38bdf8',
+              500: '#0284c7',
+              600: '#0369a1',
+              700: '#075985',
+              800: '#0c4a6e',
+              900: '#0a3651',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8fafc;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0284c7;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="text-slate-800 bg-slate-50 min-h-screen flex flex-col">
+
+  <!-- TOP NAVBAR -->
+  <header class="bg-white border-b border-ocean-100 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo & Brand Name -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-ocean-600 to-ocean-400 flex items-center justify-center text-white shadow-md shadow-ocean-500/20">
+          <i class="fa-solid fa-graduation-cap text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold bg-gradient-to-r from-ocean-800 to-ocean-600 bg-clip-text text-transparent tracking-wide">tx_arfhasblh</span>
+          <span class="hidden sm:inline-block text-xs text-ocean-600 font-medium px-2 py-0.5 bg-ocean-50 rounded-full border border-ocean-200 ml-2">UBSI Pontianak</span>
+        </div>
+      </div>
+
+      <!-- Quick Actions Header -->
+      <div class="flex items-center space-x-3">
+        <div class="hidden md:flex items-center space-x-2 text-xs font-medium text-slate-600 bg-slate-100 py-1.5 px-3 rounded-lg">
+          <i class="fa-regular fa-clock text-ocean-600"></i>
+          <span id="liveClock">--:--:--</span>
+        </div>
+        <button onclick="scrollToForm()" class="bg-ocean-600 hover:bg-ocean-700 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-all shadow-sm hover:shadow-md flex items-center gap-2">
+          <i class="fa-solid fa-plus text-xs"></i>
+          <span>Kumpul Tugas</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+
+    <!-- USER PROFILE CARD & ACCOUNT SWITCHER -->
+    <div class="bg-white rounded-2xl border border-ocean-100 shadow-sm p-6 relative overflow-hidden">
+      <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-ocean-400 via-ocean-600 to-ocean-800"></div>
+
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <!-- Profile Details & Avatar -->
+        <div class="flex items-center space-x-4">
+          <div class="relative group">
+            <div id="profileAvatarContainer" class="w-20 h-20 rounded-2xl bg-ocean-100 border-2 border-ocean-300 overflow-hidden shadow-inner flex items-center justify-center text-ocean-600 text-2xl font-bold">
+              <img id="profileAvatarImg" src="" alt="Foto Profil" class="w-full h-full object-cover hidden">
+              <span id="profileAvatarInitial">A</span>
+            </div>
+            <!-- Overlay Edit Avatar -->
+            <button onclick="openAvatarModal()" class="absolute inset-0 bg-slate-900/40 rounded-2xl flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity" title="Ubah Foto Profil">
+              <i class="fa-solid fa-camera text-sm"></i>
+            </button>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <h2 id="profileNameDisplay" class="text-xl font-bold text-slate-800">Arfhasblh</h2>
+              <button onclick="openEditProfileModal()" class="text-slate-400 hover:text-ocean-600 text-xs px-1.5 py-0.5 rounded border border-slate-200 transition-colors" title="Edit Profil">
+                <i class="fa-solid fa-pen text-[10px]"></i> Edit
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 pt-0.5">
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-ocean-50 text-ocean-700 border border-ocean-200">
+                <i class="fa-solid fa-id-card text-[10px] mr-1"></i> <span id="profileStatusDisplay">mahasiswa ubsi pontianak</span>
+              </span>
+              <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+                <i class="fa-solid fa-users-rectangle text-[10px] mr-1"></i> Kelas: <span id="profileClassDisplay">63.1B</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Account Switcher Box -->
+        <div class="w-full md:w-auto bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col sm:flex-row items-center gap-3">
+          <div class="text-left w-full sm:w-auto">
+            <p class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Akun Aktif</p>
+            <select id="accountSelect" onchange="switchAccount(this.value)" class="mt-1 font-semibold text-sm text-slate-800 bg-white border border-slate-200 rounded-lg px-3 py-1.5 focus:outline-none focus:border-ocean-500 w-full sm:w-48">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+          <div class="flex items-center gap-2 w-full sm:w-auto justify-end">
+            <button onclick="openAddAccountModal()" class="bg-white hover:bg-ocean-50 text-ocean-600 border border-ocean-200 text-xs font-semibold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5" title="Tambah Akun Baru">
+              <i class="fa-solid fa-user-plus"></i> <span>Akun Baru</span>
+            </button>
+            <button onclick="deleteCurrentAccount()" class="bg-white hover:bg-rose-50 text-rose-600 border border-rose-200 text-xs font-semibold px-3 py-2 rounded-lg transition-all" title="Hapus Akun Aktif">
+              <i class="fa-solid fa-user-xmark"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- METRICS BANNER -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Total Tugas</p>
+          <h3 id="statTotal" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-ocean-50 text-ocean-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-list-check"></i>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-emerald-500 uppercase tracking-wider">Selesai</p>
+          <h3 id="statSelesai" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-amber-500 uppercase tracking-wider">Dalam Proses</p>
+          <h3 id="statProses" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-spinner"></i>
+        </div>
+      </div>
+
+      <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+        <div>
+          <p class="text-xs font-semibold text-rose-500 uppercase tracking-wider">Belum Selesai</p>
+          <h3 id="statBelum" class="text-2xl font-bold text-slate-800 mt-1">0</h3>
+        </div>
+        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID (FORM & TASK LIST) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- LEFT SIDE: FORM PENGUMPULAN TUGAS (5 Cols) -->
+      <div id="formSection" class="lg:col-span-5 bg-white p-6 rounded-2xl border border-ocean-100 shadow-sm relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-ocean-400 via-ocean-600 to-ocean-800"></div>
+
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">Form Kumpulkan Tugas</h2>
+            <p class="text-xs text-slate-500">Kirim tugas untuk akun aktif saat ini</p>
+          </div>
+          <span class="p-2 bg-ocean-50 text-ocean-600 rounded-lg text-sm">
+            <i class="fa-solid fa-paper-plane"></i>
+          </span>
+        </div>
+
+        <form id="taskForm" onsubmit="handleAddTask(event)" class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Kuliah / Kategori <span class="text-rose-500">*</span></label>
+            <input type="text" id="taskCategory" required placeholder="Contoh: Pemrograman Web"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-200 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Tugas <span class="text-rose-500">*</span></label>
+            <input type="text" id="taskTitle" required placeholder="Masukkan judul tugas..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-200 transition-all">
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi / Catatan Tambahan</label>
+            <textarea id="taskDesc" rows="3" placeholder="Catatan mengenai tugas ini..."
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-200 transition-all resize-none"></textarea>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Status Pengerjaan</label>
+            <select id="taskStatus" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 bg-white">
+              <option value="Selesai">Selesai</option>
+              <option value="Dalam Proses" selected>Dalam Proses</option>
+              <option value="Belum Selesai">Belum Selesai</option>
+            </select>
+          </div>
+
+          <!-- Tipe Lampiran -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Jenis Lampiran <span class="text-rose-500">*</span></label>
+            <div class="grid grid-cols-3 gap-2 p-1 bg-slate-100 rounded-xl">
+              <button type="button" onclick="selectAttachmentType('link')" id="btnTypeLink" class="attach-btn py-2 text-xs font-semibold rounded-lg text-slate-700 bg-white shadow-sm flex items-center justify-center gap-1.5 transition-all">
+                <i class="fa-solid fa-link text-ocean-600"></i> Link
+              </button>
+              <button type="button" onclick="selectAttachmentType('photo')" id="btnTypePhoto" class="attach-btn py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-800 flex items-center justify-center gap-1.5 transition-all">
+                <i class="fa-solid fa-image text-emerald-600"></i> Foto
+              </button>
+              <button type="button" onclick="selectAttachmentType('doc')" id="btnTypeDoc" class="attach-btn py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-800 flex items-center justify-center gap-1.5 transition-all">
+                <i class="fa-solid fa-file-lines text-amber-600"></i> Dokumen
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Attachment Inputs -->
+          <div id="fieldLink" class="attachment-field">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Tautan / URL Tugas</label>
+            <input type="url" id="inputLink" placeholder="https://github.com/... atau Drive Link"
+              class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+          </div>
+
+          <div id="fieldPhoto" class="attachment-field hidden">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Unggah Foto / Screenshot</label>
+            <input type="file" id="inputPhoto" accept="image/*" onchange="previewImageHandler(this, 'photoPreviewContainer', 'photoPreviewImg')"
+              class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 border border-slate-200 rounded-xl cursor-pointer">
+            <div id="photoPreviewContainer" class="mt-2 hidden">
+              <img id="photoPreviewImg" src="" alt="Preview" class="h-28 w-full object-cover rounded-xl border border-slate-200">
+            </div>
+          </div>
+
+          <div id="fieldDoc" class="attachment-field hidden">
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Unggah Dokumen (PDF, DOCX, dll)</label>
+            <input type="file" id="inputDoc" onchange="handleDocFileSelect(this)"
+              class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 border border-slate-200 rounded-xl cursor-pointer">
+            <p id="docNameDisplay" class="text-xs text-ocean-600 mt-1 font-medium hidden"></p>
+          </div>
+
+          <div class="bg-ocean-50/60 p-3 rounded-xl border border-ocean-100 flex items-center space-x-2 text-xs text-ocean-800">
+            <i class="fa-solid fa-clock-rotate-left text-ocean-600"></i>
+            <span>Tanggal & Waktu akan dicatat <strong>otomatis saat disubmit</strong>.</span>
+          </div>
+
+          <button type="submit" class="w-full bg-ocean-600 hover:bg-ocean-700 text-white font-semibold py-3 px-4 rounded-xl shadow-md shadow-ocean-500/20 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Kumpulkan Tugas Sekarang</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- RIGHT SIDE: RESEARCH, SEARCH & TASK LIST (7 Cols) -->
+      <div class="lg:col-span-7 space-y-5">
+        
+        <!-- RESEARCH & SEARCH ENGINE BAR -->
+        <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+          <div class="flex flex-col sm:flex-row gap-3">
+            <div class="relative flex-1">
+              <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                <i class="fa-solid fa-magnifying-glass text-sm"></i>
+              </div>
+              <input type="text" id="searchInput" oninput="filterAndRenderTasks()" placeholder="Cari tugas (Research: judul, mata kuliah, isi lampiran)..."
+                class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 focus:ring-2 focus:ring-ocean-200 transition-all">
+            </div>
+
+            <div class="w-full sm:w-48">
+              <select id="statusFilter" onchange="filterAndRenderTasks()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 bg-white text-slate-700">
+                <option value="ALL">Semua Status</option>
+                <option value="Selesai">Selesai</option>
+                <option value="Dalam Proses">Dalam Proses</option>
+                <option value="Belum Selesai">Belum Selesai</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 pt-1 border-t border-slate-100 text-xs">
+            <span class="text-slate-400 font-medium">Filter Tipe:</span>
+            <button onclick="setMediaTypeFilter('ALL')" id="filterMediaAll" class="px-2.5 py-1 rounded-lg font-medium bg-ocean-600 text-white transition-all">Semua</button>
+            <button onclick="setMediaTypeFilter('link')" id="filterMediaLink" class="px-2.5 py-1 rounded-lg font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Link</button>
+            <button onclick="setMediaTypeFilter('photo')" id="filterMediaPhoto" class="px-2.5 py-1 rounded-lg font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Foto</button>
+            <button onclick="setMediaTypeFilter('doc')" id="filterMediaDoc" class="px-2.5 py-1 rounded-lg font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all">Dokumen</button>
+          </div>
+        </div>
+
+        <!-- TASK LIST HEADER -->
+        <div class="flex items-center justify-between px-1">
+          <h3 class="text-md font-bold text-slate-800 flex items-center gap-2">
+            <span>Daftar Tugas Akun Aktif</span>
+            <span id="taskCounterBadge" class="text-xs bg-ocean-100 text-ocean-700 font-semibold px-2 py-0.5 rounded-full">0</span>
+          </h3>
+          <span class="text-xs text-slate-400">Pencatatan waktu otomatis aktif</span>
+        </div>
+
+        <!-- TASK CARDS CONTAINER -->
+        <div id="taskListContainer" class="space-y-4"></div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyState" class="hidden bg-white rounded-2xl border border-dashed border-slate-300 p-8 text-center space-y-3">
+          <div class="w-16 h-16 bg-ocean-50 text-ocean-500 rounded-full flex items-center justify-center mx-auto text-2xl">
+            <i class="fa-solid fa-folder-open"></i>
+          </div>
+          <h4 class="text-slate-700 font-semibold">Tidak ada tugas ditemukan</h4>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto">Gunakan kolom pencarian research di atas atau kumpulkan tugas baru Anda melalui formulir.</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-auto bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+    <p>&copy; 2026 <strong class="text-ocean-700">tx_arfhasblh</strong> • UBSI Pontianak Kelas 63.1B</p>
+  </footer>
+
+  <!-- MODAL EDIT TUGAS -->
+  <div id="editModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-100 transform scale-95 transition-transform duration-200" id="modalBox">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-pen-to-square text-ocean-600"></i> Edit Informasi Tugas
+        </h3>
+        <button onclick="closeEditModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="editTaskForm" onsubmit="handleSaveEdit(event)" class="p-6 space-y-4">
+        <input type="hidden" id="editTaskId">
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Judul Tugas</label>
+          <input type="text" id="editTitle" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Mata Kuliah / Kategori</label>
+          <input type="text" id="editCategory" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Deskripsi</label>
+          <textarea id="editDesc" rows="3" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Status Tugas</label>
+            <select id="editStatus" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500 bg-white">
+              <option value="Selesai">Selesai</option>
+              <option value="Dalam Proses">Dalam Proses</option>
+              <option value="Belum Selesai">Belum Selesai</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">Lampiran / Link</label>
+            <input type="text" id="editAttachmentData" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+          </div>
+        </div>
+
+        <div class="pt-2 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeEditModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-ocean-600 hover:bg-ocean-700 text-white text-xs font-semibold shadow-md shadow-ocean-500/20">Simpan Perubahan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL UBAH FOTO PROFIL -->
+  <div id="avatarModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 transform scale-95 transition-transform duration-200" id="avatarModalBox">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-camera text-ocean-600"></i> Ubah Foto Profil
+        </h3>
+        <button onclick="closeAvatarModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <div class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-2">Unggah Gambar dari Perangkat</label>
+          <input type="file" id="uploadAvatarFile" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-ocean-50 file:text-ocean-700 hover:file:bg-ocean-100 border border-slate-200 rounded-xl cursor-pointer">
+        </div>
+        <div class="relative flex py-2 items-center">
+          <div class="flex-grow border-t border-slate-200"></div>
+          <span class="flex-shrink mx-4 text-xs text-slate-400">Atau gunakan URL Foto</span>
+          <div class="flex-grow border-t border-slate-200"></div>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Tautan URL Gambar</label>
+          <input type="url" id="uploadAvatarUrl" placeholder="https://example.com/avatar.jpg" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div class="pt-2 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeAvatarModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+          <button type="button" onclick="saveNewAvatar()" class="px-5 py-2.5 rounded-xl bg-ocean-600 hover:bg-ocean-700 text-white text-xs font-semibold shadow-md shadow-ocean-500/20">Perbarui Foto</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL EDIT PROFIL (NAMA DLL) -->
+  <div id="editProfileModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 transform scale-95 transition-transform duration-200" id="editProfileModalBox">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-user-pen text-ocean-600"></i> Edit Informasi Profil
+        </h3>
+        <button onclick="closeEditProfileModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form onsubmit="saveProfileDetails(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Pengguna</label>
+          <input type="text" id="inputProfileName" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Status Kampus</label>
+          <input type="text" id="inputProfileStatus" required value="mahasiswa ubsi pontianak" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
+          <input type="text" id="inputProfileClass" required value="63.1B" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div class="pt-2 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeEditProfileModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-ocean-600 hover:bg-ocean-700 text-white text-xs font-semibold shadow-md shadow-ocean-500/20">Simpan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL TAMBAH AKUN BARU -->
+  <div id="addAccountModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden opacity-0 transition-opacity duration-200 p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden border border-slate-100 transform scale-95 transition-transform duration-200" id="addAccountModalBox">
+      <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-user-plus text-ocean-600"></i> Tambah Akun Baru
+        </h3>
+        <button onclick="closeAddAccountModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+      <form onsubmit="createNewAccount(event)" class="p-6 space-y-4">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Mahasiswa</label>
+          <input type="text" id="newAccName" required placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Status</label>
+          <input type="text" id="newAccStatus" value="mahasiswa ubsi pontianak" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Kelas</label>
+          <input type="text" id="newAccClass" value="63.1B" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-ocean-500">
+        </div>
+        <div class="pt-2 flex items-center justify-end space-x-3">
+          <button type="button" onclick="closeAddAccountModal()" class="px-4 py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100">Batal</button>
+          <button type="submit" class="px-5 py-2.5 rounded-xl bg-ocean-600 hover:bg-ocean-700 text-white text-xs font-semibold shadow-md shadow-ocean-500/20">Buat & Masuk</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTIFICATION TOAST -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center space-x-3 text-xs font-medium">
+      <span id="toastIcon" class="text-emerald-400"><i class="fa-solid fa-circle-check text-base"></i></span>
+      <span id="toastMsg">Pesan Notifikasi</span>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // State Application
+    let accounts = [];
+    let currentAccountId = null;
+    let tasks = [];
+    let currentAttachmentType = 'link';
+    let currentDocFile = null;
+    let currentMediaFilter = 'ALL';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initAppStorage();
+      startLiveClock();
+      renderProfile();
+      renderAccountDropdown();
+      filterAndRenderTasks();
+    });
+
+    // Clock
+    function startLiveClock() {
+      const clockEl = document.getElementById('liveClock');
+      const updateClock = () => {
+        const now = new Date();
+        clockEl.innerText = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+      };
+      updateClock();
+      setInterval(updateClock, 1000);
+    }
+
+    // Storage Initialization & Multi-account setup
+    function initAppStorage() {
+      const storedAccs = localStorage.getItem('tx_arfhasblh_accounts');
+      const storedActive = localStorage.getItem('tx_arfhasblh_active_id');
+      const storedTasks = localStorage.getItem('tx_arfhasblh_all_tasks');
+
+      if (storedAccs) {
+        try { accounts = JSON.parse(storedAccs); } catch(e) { accounts = []; }
+      }
+
+      if (accounts.length === 0) {
+        // Default account
+        const defaultAcc = {
+          id: 'acc-' + Date.now(),
+          name: 'Arfhasblh',
+          status: 'mahasiswa ubsi pontianak',
+          classRoom: '63.1B',
+          avatar: ''
+        };
+        accounts.push(defaultAcc);
+        currentAccountId = defaultAcc.id;
+        localStorage.setItem('tx_arfhasblh_accounts', JSON.stringify(accounts));
+        localStorage.setItem('tx_arfhasblh_active_id', currentAccountId);
+      } else {
+        currentAccountId = storedActive && accounts.some(a => a.id === storedActive) ? storedActive : accounts[0].id;
+      }
+
+      if (storedTasks) {
+        try { tasks = JSON.parse(storedTasks); } catch(e) { tasks = []; }
+      } else {
+        // Sample tasks for initial demo
+        tasks = [
+          {
+            id: 'task-101',
+            accountId: currentAccountId,
+            category: 'Pemrograman Web',
+            title: 'Membuat Dashboard Interaktif Tailwind',
+            desc: 'Implementasi komponen responsive dengan fitur localstorage.',
+            status: 'Selesai',
+            attachmentType: 'link',
+            attachmentData: 'https://github.com/arfhasblh/tx_arfhasblh',
+            timestamp: '19/10/2026, 14:30 WIB'
+          },
+          {
+            id: 'task-102',
+            accountId: currentAccountId,
+            category: 'Desain Antarmuka',
+            title: 'Mockup UI Aplikasi Kelola Tugas',
+            desc: 'Desain prototipe warna tema biru laut (ocean blue).',
+            status: 'Dalam Proses',
+            attachmentType: 'photo',
+            attachmentData: 'https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80',
+            timestamp: '19/10/2026, 16:15 WIB'
+          }
+        ];
+        saveTasksStorage();
+      }
+    }
+
+    function saveAccountsStorage() {
+      localStorage.setItem('tx_arfhasblh_accounts', JSON.stringify(accounts));
+      localStorage.setItem('tx_arfhasblh_active_id', currentAccountId);
+    }
+
+    function saveTasksStorage() {
+      localStorage.setItem('tx_arfhasblh_all_tasks', JSON.stringify(tasks));
+      updateStatistics();
+    }
+
+    // Get Active Account Object
+    function getActiveAccount() {
+      return accounts.find(a => a.id === currentAccountId) || accounts[0];
+    }
+
+    // Render Profile UI
+    function renderProfile() {
+      const acc = getActiveAccount();
+      document.getElementById('profileNameDisplay').innerText = acc.name;
+      document.getElementById('profileStatusDisplay').innerText = acc.status;
+      document.getElementById('profileClassDisplay').innerText = acc.classRoom;
+
+      const imgEl = document.getElementById('profileAvatarImg');
+      const initialEl = document.getElementById('profileAvatarInitial');
+
+      if (acc.avatar && acc.avatar.trim() !== '') {
+        imgEl.src = acc.avatar;
+        imgEl.classList.remove('hidden');
+        initialEl.classList.add('hidden');
+      } else {
+        imgEl.classList.add('hidden');
+        initialEl.classList.remove('hidden');
+        initialEl.innerText = acc.name.charAt(0).toUpperCase();
+      }
+    }
+
+    function renderAccountDropdown() {
+      const select = document.getElementById('accountSelect');
+      select.innerHTML = accounts.map(acc => `
+        <option value="${acc.id}" ${acc.id === currentAccountId ? 'selected' : ''}>
+          ${acc.name} (${acc.classRoom})
+        </option>
+      `).join('');
+    }
+
+    // Switch Account
+    function switchAccount(id) {
+      currentAccountId = id;
+      localStorage.setItem('tx_arfhasblh_active_id', currentAccountId);
+      renderProfile();
+      filterAndRenderTasks();
+      showToast("Berhasil beralih ke akun: " + getActiveAccount().name);
+    }
+
+    // Modal Add Account
+    function openAddAccountModal() {
+      const modal = document.getElementById('addAccountModal');
+      const box = document.getElementById('addAccountModalBox');
+      modal.classList.remove('hidden');
+      setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+    }
+    function closeAddAccountModal() {
+      const modal = document.getElementById('addAccountModal');
+      const box = document.getElementById('addAccountModalBox');
+      modal.classList.add('opacity-0'); box.classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+    function createNewAccount(e) {
+      e.preventDefault();
+      const name = document.getElementById('newAccName').value.trim();
+      const status = document.getElementById('newAccStatus').value.trim();
+      const classRoom = document.getElementById('newAccClass').value.trim();
+
+      const newAcc = {
+        id: 'acc-' + Date.now(),
+        name,
+        status,
+        classRoom,
+        avatar: ''
+      };
+
+      accounts.push(newAcc);
+      currentAccountId = newAcc.id;
+      saveAccountsStorage();
+      renderProfile();
+      renderAccountDropdown();
+      filterAndRenderTasks();
+      closeAddAccountModal();
+      document.getElementById('newAccName').value = '';
+      showToast("Akun baru berhasil ditambahkan!");
+    }
+
+    function deleteCurrentAccount() {
+      if (accounts.length <= 1) {
+        showToast("Minimal harus ada 1 akun aktif di sistem!", "danger");
+        return;
+      }
+      if (confirm(`Apakah Anda yakin ingin menghapus akun "${getActiveAccount().name}" beserta seluruh tugasnya?`)) {
+        const delId = currentAccountId;
+        accounts = accounts.filter(a => a.id !== delId);
+        tasks = tasks.filter(t => t.accountId !== delId);
+        currentAccountId = accounts[0].id;
+        saveAccountsStorage();
+        saveTasksStorage();
+        renderProfile();
+        renderAccountDropdown();
+        filterAndRenderTasks();
+        showToast("Akun berhasil dihapus", "danger");
+      }
+    }
+
+    // Avatar Customization Modals
+    function openAvatarModal() {
+      const modal = document.getElementById('avatarModal');
+      const box = document.getElementById('avatarModalBox');
+      modal.classList.remove('hidden');
+      setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+    }
+    function closeAvatarModal() {
+      const modal = document.getElementById('avatarModal');
+      const box = document.getElementById('avatarModalBox');
+      modal.classList.add('opacity-0'); box.classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+
+    async function saveNewAvatar() {
+      const fileInput = document.getElementById('uploadAvatarFile');
+      const urlInput = document.getElementById('uploadAvatarUrl').value.trim();
+      let avatarData = '';
+
+      if (fileInput.files && fileInput.files[0]) {
+        avatarData = await readFileAsBase64(fileInput.files[0]);
+      } else if (urlInput !== '') {
+        avatarData = urlInput;
+      } else {
+        showToast("Pilih file gambar atau masukkan URL terlebih dahulu!", "danger");
+        return;
+      }
+
+      const acc = getActiveAccount();
+      acc.avatar = avatarData;
+      saveAccountsStorage();
+      renderProfile();
+      closeAvatarModal();
+      showToast("Foto profil berhasil diperbarui!");
+    }
+
+    // Edit Profile Modal
+    function openEditProfileModal() {
+      const acc = getActiveAccount();
+      document.getElementById('inputProfileName').value = acc.name;
+      document.getElementById('inputProfileStatus').value = acc.status;
+      document.getElementById('inputProfileClass').value = acc.classRoom;
+
+      const modal = document.getElementById('editProfileModal');
+      const box = document.getElementById('editProfileModalBox');
+      modal.classList.remove('hidden');
+      setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+    }
+    function closeEditProfileModal() {
+      const modal = document.getElementById('editProfileModal');
+      const box = document.getElementById('editProfileModalBox');
+      modal.classList.add('opacity-0'); box.classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+    function saveProfileDetails(e) {
+      e.preventDefault();
+      const acc = getActiveAccount();
+      acc.name = document.getElementById('inputProfileName').value.trim();
+      acc.status = document.getElementById('inputProfileStatus').value.trim();
+      acc.classRoom = document.getElementById('inputProfileClass').value.trim();
+
+      saveAccountsStorage();
+      renderProfile();
+      renderAccountDropdown();
+      closeEditProfileModal();
+      showToast("Profil berhasil diperbarui!");
+    }
+
+    // Attachment Toggle Form
+    function selectAttachmentType(type) {
+      currentAttachmentType = type;
+      const btns = {
+        link: document.getElementById('btnTypeLink'),
+        photo: document.getElementById('btnTypePhoto'),
+        doc: document.getElementById('btnTypeDoc')
+      };
+      const fields = {
+        link: document.getElementById('fieldLink'),
+        photo: document.getElementById('fieldPhoto'),
+        doc: document.getElementById('fieldDoc')
+      };
+
+      Object.keys(btns).forEach(key => {
+        if (key === type) {
+          btns[key].className = "attach-btn py-2 text-xs font-semibold rounded-lg text-slate-800 bg-white shadow-sm flex items-center justify-center gap-1.5 transition-all border border-slate-200";
+          fields[key].classList.remove('hidden');
+        } else {
+          btns[key].className = "attach-btn py-2 text-xs font-semibold rounded-lg text-slate-600 hover:text-slate-800 flex items-center justify-center gap-1.5 transition-all";
+          fields[key].classList.add('hidden');
+        }
+      });
+    }
+
+    function previewImageHandler(input, containerId, imgId) {
+      const container = document.getElementById(containerId);
+      const img = document.getElementById(imgId);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          img.src = e.target.result;
+          container.classList.remove('hidden');
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function handleDocFileSelect(input) {
+      const display = document.getElementById('docNameDisplay');
+      if (input.files && input.files[0]) {
+        currentDocFile = input.files[0];
+        display.innerText = "File terpilih: " + currentDocFile.name + " (" + Math.round(currentDocFile.size/1024) + " KB)";
+        display.classList.remove('hidden');
+      } else {
+        currentDocFile = null;
+        display.classList.add('hidden');
+      }
+    }
+
+    function readFileAsBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Add Task Handler
+    async function handleAddTask(e) {
+      e.preventDefault();
+
+      const category = document.getElementById('taskCategory').value.trim();
+      const title = document.getElementById('taskTitle').value.trim();
+      const desc = document.getElementById('taskDesc').value.trim();
+      const status = document.getElementById('taskStatus').value;
+
+      // Auto Timestamp
+      const now = new Date();
+      const dateStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+      const fullTimestamp = `${dateStr}, ${timeStr} WIB`;
+
+      let attachmentData = '';
+      if (currentAttachmentType === 'link') {
+        attachmentData = document.getElementById('inputLink').value.trim() || 'https://';
+      } else if (currentAttachmentType === 'photo') {
+        const photoInput = document.getElementById('inputPhoto');
+        if (photoInput.files && photoInput.files[0]) {
+          attachmentData = await readFileAsBase64(photoInput.files[0]);
+        } else {
+          attachmentData = 'https://placehold.co/600x400/0284c7/FFFFFF?text=Foto+Tugas';
+        }
+      } else if (currentAttachmentType === 'doc') {
+        attachmentData = currentDocFile ? currentDocFile.name : 'Dokumen_Tugas.pdf';
+      }
+
+      const newTask = {
+        id: 'task-' + Date.now(),
+        accountId: currentAccountId,
+        category,
+        title,
+        desc,
+        status,
+        attachmentType: currentAttachmentType,
+        attachmentData,
+        timestamp: fullTimestamp
+      };
+
+      tasks.unshift(newTask);
+      saveTasksStorage();
+      filterAndRenderTasks();
+
+      // Reset
+      document.getElementById('taskForm').reset();
+      document.getElementById('photoPreviewContainer').classList.add('hidden');
+      document.getElementById('docNameDisplay').classList.add('hidden');
+      selectAttachmentType('link');
+
+      showToast("Tugas berhasil dikumpulkan!");
+    }
+
+    // Delete Task
+    function deleteTask(id) {
+      if (confirm('Apakah Anda yakin ingin menghapus tugas ini?')) {
+        tasks = tasks.filter(t => t.id !== id);
+        saveTasksStorage();
+        filterAndRenderTasks();
+        showToast("Tugas telah dihapus", "danger");
+      }
+    }
+
+    // Edit Task Modal
+    function openEditModal(id) {
+      const task = tasks.find(t => t.id === id);
+      if (!task) return;
+
+      document.getElementById('editTaskId').value = task.id;
+      document.getElementById('editTitle').value = task.title;
+      document.getElementById('editCategory').value = task.category;
+      document.getElementById('editDesc').value = task.desc || '';
+      document.getElementById('editStatus').value = task.status;
+      document.getElementById('editAttachmentData').value = task.attachmentData;
+
+      const modal = document.getElementById('editModal');
+      const box = document.getElementById('modalBox');
+      modal.classList.remove('hidden');
+      setTimeout(() => { modal.classList.remove('opacity-0'); box.classList.remove('scale-95'); }, 10);
+    }
+    function closeEditModal() {
+      const modal = document.getElementById('editModal');
+      const box = document.getElementById('modalBox');
+      modal.classList.add('opacity-0'); box.classList.add('scale-95');
+      setTimeout(() => modal.classList.add('hidden'), 200);
+    }
+    function handleSaveEdit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editTaskId').value;
+      const idx = tasks.findIndex(t => t.id === id);
+      if (idx !== -1) {
+        tasks[idx].title = document.getElementById('editTitle').value.trim();
+        tasks[idx].category = document.getElementById('editCategory').value.trim();
+        tasks[idx].desc = document.getElementById('editDesc').value.trim();
+        tasks[idx].status = document.getElementById('editStatus').value;
+        tasks[idx].attachmentData = document.getElementById('editAttachmentData').value.trim();
+
+        saveTasksStorage();
+        filterAndRenderTasks();
+        closeEditModal();
+        showToast("Perubahan tugas berhasil disimpan!");
+      }
+    }
+
+    // Research, Search & Filters
+    function setMediaTypeFilter(type) {
+      currentMediaFilter = type;
+      ['All', 'Link', 'Photo', 'Doc'].forEach(t => {
+        const btn = document.getElementById('filterMedia' + t);
+        if (t.toLowerCase() === type.toLowerCase()) {
+          btn.className = "px-2.5 py-1 rounded-lg font-medium bg-ocean-600 text-white transition-all";
+        } else {
+          btn.className = "px-2.5 py-1 rounded-lg font-medium bg-slate-100 text-slate-600 hover:bg-slate-200 transition-all";
+        }
+      });
+      filterAndRenderTasks();
+    }
+
+    function filterAndRenderTasks() {
+      const container = document.getElementById('taskListContainer');
+      const emptyState = document.getElementById('emptyState');
+      const searchKeyword = document.getElementById('searchInput').value.toLowerCase().trim();
+      const statusValue = document.getElementById('statusFilter').value;
+
+      // Filter by active account first, then search, status, and media type
+      const accountTasks = tasks.filter(t => t.accountId === currentAccountId);
+
+      const filtered = accountTasks.filter(task => {
+        const matchSearch = task.title.toLowerCase().includes(searchKeyword) ||
+                            (task.desc && task.desc.toLowerCase().includes(searchKeyword)) ||
+                            task.category.toLowerCase().includes(searchKeyword) ||
+                            task.attachmentData.toLowerCase().includes(searchKeyword);
+
+        const matchStatus = (statusValue === 'ALL') || (task.status === statusValue);
+        const matchMedia = (currentMediaFilter === 'ALL') || (task.attachmentType === currentMediaFilter);
+
+        return matchSearch && matchStatus && matchMedia;
+      });
+
+      document.getElementById('taskCounterBadge').innerText = filtered.length;
+
+      if (filtered.length === 0) {
+        container.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      container.innerHTML = filtered.map(task => createTaskCardHTML(task)).join('');
+    }
+
+    function createTaskCardHTML(task) {
+      let statusBadge = '';
+      if (task.status === 'Selesai') {
+        statusBadge = `<span class="px-2.5 py-1 text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-[10px]"></i> Selesai</span>`;
+      } else if (task.status === 'Dalam Proses') {
+        statusBadge = `<span class="px-2.5 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-spinner text-[10px]"></i> Dalam Proses</span>`;
+      } else {
+        statusBadge = `<span class="px-2.5 py-1 text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-triangle-exclamation text-[10px]"></i> Belum Selesai</span>`;
+      }
+
+      let attachmentHTML = '';
+      if (task.attachmentType === 'link') {
+        attachmentHTML = `
+          <div class="mt-3 p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 truncate">
+              <i class="fa-solid fa-link text-ocean-600"></i>
+              <a href="${task.attachmentData}" target="_blank" class="text-ocean-600 font-medium hover:underline truncate">${task.attachmentData}</a>
+            </div>
+            <button onclick="copyToClipboard('${task.attachmentData}')" title="Salin Link" class="text-slate-400 hover:text-slate-600 px-2 py-1">
+              <i class="fa-regular fa-copy"></i>
+            </button>
+          </div>
+        `;
+      } else if (task.attachmentType === 'photo') {
+        attachmentHTML = `
+          <div class="mt-3 space-y-2">
+            <div class="text-xs text-slate-500 font-medium flex items-center gap-1">
+              <i class="fa-solid fa-image text-emerald-600"></i> Lampiran Foto:
+            </div>
+            <img src="${task.attachmentData}" alt="Lampiran Foto" class="max-h-48 w-full object-cover rounded-xl border border-slate-200">
+          </div>
+        `;
+      } else if (task.attachmentType === 'doc') {
+        attachmentHTML = `
+          <div class="mt-3 p-3 bg-amber-50/50 border border-amber-200 rounded-xl flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2.5">
+              <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                <i class="fa-solid fa-file-lines"></i>
+              </div>
+              <div>
+                <p class="font-semibold text-slate-800">${task.attachmentData}</p>
+                <p class="text-[10px] text-slate-400">Dokumen Terlampir</p>
+              </div>
+            </div>
+            <span class="text-xs text-amber-700 bg-amber-100/80 px-2.5 py-1 rounded-lg font-medium">Tersimpan</span>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm hover:shadow-md transition-all group">
+          <div class="flex items-start justify-between gap-3">
+            <div>
+              <span class="text-[11px] font-semibold text-ocean-600 uppercase tracking-wider bg-ocean-50 px-2 py-0.5 rounded-md border border-ocean-100">
+                ${escapeHTML(task.category)}
+              </span>
+              <h4 class="text-base font-bold text-slate-800 mt-1 group-hover:text-ocean-700 transition-colors">
+                ${escapeHTML(task.title)}
+              </h4>
+            </div>
+            <div>${statusBadge}</div>
+          </div>
+
+          ${task.desc ? `<p class="text-xs text-slate-600 mt-2 line-clamp-2">${escapeHTML(task.desc)}</p>` : ''}
+          ${attachmentHTML}
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
+            <div class="flex items-center space-x-1">
+              <i class="fa-regular fa-calendar-check text-ocean-600"></i>
+              <span class="text-[11px] text-slate-500 font-medium">Dikumpulkan: ${task.timestamp}</span>
+            </div>
+
+            <div class="flex items-center space-x-1">
+              <button onclick="openEditModal('${task.id}')" class="p-2 hover:bg-slate-100 text-slate-600 hover:text-ocean-600 rounded-lg transition-colors" title="Edit Tugas">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="deleteTask('${task.id}')" class="p-2 hover:bg-rose-50 text-slate-600 hover:text-rose-600 rounded-lg transition-colors" title="Hapus Tugas">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function updateStatistics() {
+      const accountTasks = tasks.filter(t => t.accountId === currentAccountId);
+      document.getElementById('statTotal').innerText = accountTasks.length;
+      document.getElementById('statSelesai').innerText = accountTasks.filter(t => t.status === 'Selesai').length;
+      document.getElementById('statProses').innerText = accountTasks.filter(t => t.status === 'Dalam Proses').length;
+      document.getElementById('statBelum').innerText = accountTasks.filter(t => t.status === 'Belum Selesai').length;
+    }
+
+    function scrollToForm() {
+      document.getElementById('formSection').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function copyToClipboard(text) {
+      const input = document.createElement('textarea');
+      input.value = text;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand('copy');
+      document.body.removeChild(input);
+      showToast("Tautan berhasil disalin!");
+    }
+
+    function escapeHTML(str) {
+      return str ? str.replace(/[&<>'"]/g, 
+        tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+      ) : '';
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.innerText = message;
+      if (type === 'danger') {
+        toastIcon.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400 text-base"></i>`;
+      } else {
+        toastIcon.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>`;
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
